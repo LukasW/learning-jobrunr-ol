@@ -2,16 +2,23 @@
 <server description="${project.name}">
 
     <featureManager>
-        <feature>microProfile-7.1</feature>
-        <feature>enterpriseBeansLite-4.0</feature>
-        <feature>jdbc-4.3</feature>
+        <platform>microProfile-7.1</platform>
+        <platform>jakartaee-10.0</platform>
+
+        <feature>persistence</feature>
+        <feature>cdi</feature>
+        <feature>restfulWS</feature>
+        <feature>jsonb</feature>
+
+
+        <feature>mpOpenAPI</feature>
     </featureManager>
 
     <httpEndpoint id="defaultHttpEndpoint"
                   httpPort="9080"
                   httpsPort="9443"/>
 
-    <webApplication location="${project.name}.war" contextRoot="${app.context.root}">
+    <webApplication location="${project.name}.war" contextRoot="/">
         <classloader apiTypeVisibility="+third-party"/>
     </webApplication>
 
@@ -24,13 +31,13 @@
     <mpJwt id="jwtUserConsumer" keyName="theKeyId" audiences="targetService" issuer="${jwt.issuer}"/>
 
     <!-- PostgreSQL JDBC driver library -->
-    <library id="PostgreSQLJDBCDriver">
-        <fileset dir="${server.config.dir}/../lib" includes="postgresql-*.jar"/>
+    <library id="PostgresLib">
+        <fileset dir="${shared.resource.dir}" includes="*.jar"/>
     </library>
 
     <!-- PostgreSQL DataSource -->
-    <dataSource id="PostgresDS" jndiName="jdbc/PostgresDS">
-        <jdbcDriver libraryRef="PostgreSQLJDBCDriver"/>
+    <dataSource id="PostgresDS" jndiName="jdbc/PostgresDS" type="javax.sql.XADataSource">
+        <jdbcDriver libraryRef="PostgresLib "/>
         <properties databaseName="postgres"
                     serverName="localhost"
                     portNumber="5432"

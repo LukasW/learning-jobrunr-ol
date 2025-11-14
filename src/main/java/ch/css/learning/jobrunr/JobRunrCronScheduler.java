@@ -1,4 +1,4 @@
-package ch.css.learning.learning.jobrunr.ol;
+package ch.css.learning.jobrunr;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Initialized;

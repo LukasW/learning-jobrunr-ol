@@ -1,4 +1,4 @@
-package ch.css.learning.learning.jobrunr.ol;
+package ch.css.learning.jobrunr;
 
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;

@@ -1,4 +1,4 @@
-package ch.css.learning.learning.jobrunr.ol;
+package ch.css.learning.jobrunr.lib;
 
 import jakarta.enterprise.inject.Produces;
 import jakarta.enterprise.inject.spi.CDI;
