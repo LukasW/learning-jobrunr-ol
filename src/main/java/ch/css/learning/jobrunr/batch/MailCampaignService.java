@@ -28,13 +28,15 @@ public class MailCampaignService {
     @Inject
     JobScheduler jobScheduler;
 
+
+    @Transactional
     public void startMailCampagneBatch(String mailTemplateKey) {
-        jobScheduler.startBatch(() -> this.enqueueChildren(mailTemplateKey));
+        jobScheduler.startBatch(() -> this.enqueueChildren(mailTemplateKey, JobContext.Null));
     }
 
     @Transactional
     @Job(name = "Send E-Mails to all subscribers", retries = 1)
-    public void enqueueChildren(String mailTemplateKey) {
+    public void enqueueChildren(String mailTemplateKey, JobContext jobContext) {
         AtomicInteger counter = new AtomicInteger();
 
         Stream<JobBuilder> jobBuilderStream = userRepository
@@ -51,7 +53,7 @@ public class MailCampaignService {
                         .withId(UUID.randomUUID())
                         .withAmountOfRetries(0)
                         .withName("Send mail to user " + id)
-                        .withLabels("batch:" + "blubb")
+                        .withLabels("batch:" + jobContext.getJobName())
                         .withDetails(() -> sendMailJob.send(id, mailTemplateKey, JobContext.Null))
                 );
 

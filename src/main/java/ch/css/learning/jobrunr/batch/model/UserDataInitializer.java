@@ -1,8 +1,6 @@
-package ch.css.learning.jobrunr.batch;
+package ch.css.learning.jobrunr.batch.model;
 
 
-import ch.css.learning.jobrunr.batch.model.User;
-import ch.css.learning.jobrunr.batch.model.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
@@ -20,7 +18,7 @@ public class UserDataInitializer {
     @Transactional
     public void onStart(@Observes @Initialized(ApplicationScoped.class) Object init) {
         if (userRepository.count() == 0) {
-            IntStream.rangeClosed(1, 200_000).forEach(i -> {
+            IntStream.rangeClosed(1, 100).forEach(i -> {
                 User user = new User();
                 user.setUsername("user" + i);
                 user.setEmail("user" + i + "@example.com");

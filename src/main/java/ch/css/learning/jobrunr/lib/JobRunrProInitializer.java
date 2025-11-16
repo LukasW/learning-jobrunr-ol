@@ -7,15 +7,17 @@ import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Produces;
+import jakarta.enterprise.inject.spi.CDI;
 import org.jobrunr.configuration.JobRunrConfiguration;
 import org.jobrunr.configuration.JobRunrPro;
 import org.jobrunr.scheduling.JobScheduler;
 import org.jobrunr.server.BackgroundJobServer;
-import org.jobrunr.server.configuration.WeightedRoundRobinDynamicQueuePolicy;
+import org.jobrunr.server.JobActivator;
+import org.jobrunr.server.JobActivatorShutdownException;
+import org.jobrunr.server.configuration.RoundRobinDynamicQueuePolicy;
 import org.jobrunr.storage.sql.common.SqlStorageProviderFactory;
 
 import javax.sql.DataSource;
-import java.util.Map;
 
 import static org.jobrunr.dashboard.JobRunrDashboardWebServerConfiguration.usingStandardDashboardConfiguration;
 import static org.jobrunr.server.BackgroundJobServerConfiguration.usingStandardBackgroundJobServerConfiguration;
@@ -24,21 +26,25 @@ import static org.jobrunr.server.BackgroundJobServerConfiguration.usingStandardB
 public class JobRunrProInitializer {
 
     // Inject the DataSource you defined in server.xml
-    @Resource(lookup = "jdbc/PostgresDS")
+    @Resource(lookup = "jdbc/postgres-jobrunr-ds")
     private DataSource dataSource;
 
     private BackgroundJobServer backgroundJobServer;
     private JobScheduler jobScheduler;
 
-
     public void onStart(@Observes @Initialized(ApplicationScoped.class) Object init) {
         JobRunrConfiguration.JobRunrConfigurationResult jobRunrConfigurationResult = JobRunrPro.configure()
-                .useJobActivator(new CdiJobActivator())
+                .useJobActivator(new JobActivator() {
+                    @Override
+                    public <T> T activateJob(Class<T> type) throws JobActivatorShutdownException {
+                        return CDI.current().select(type).get();
+                    }
+                })
                 .useStorageProvider(SqlStorageProviderFactory.using(
                         dataSource))
                 .useBackgroundJobServer(usingStandardBackgroundJobServerConfiguration()
-                        .andWorkerCount(100)
-                        .andDynamicQueuePolicy(new WeightedRoundRobinDynamicQueuePolicy("tenant:", Map.of("Tenant-A", 5))))
+                        .andWorkerCount(20)
+                        .andDynamicQueuePolicy(new RoundRobinDynamicQueuePolicy("batch:")))
                 .useDashboard(usingStandardDashboardConfiguration()
                         .andDynamicQueueConfiguration("Batch", "batch:"))
                 .initialize();

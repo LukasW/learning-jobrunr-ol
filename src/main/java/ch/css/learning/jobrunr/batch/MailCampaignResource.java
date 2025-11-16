@@ -1,6 +1,7 @@
 package ch.css.learning.jobrunr.batch;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
@@ -13,6 +14,7 @@ public class MailCampaignResource {
 
     @GET
     @Path("/trigger")
+    @Transactional
     public String triggerLongJob(@DefaultValue("general-template") @QueryParam("template") String mailTemplateKey) {
         mailCampaignService.startMailCampagneBatch(mailTemplateKey);
         return "Batch Job eingereiht!";

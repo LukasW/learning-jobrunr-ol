@@ -31,13 +31,25 @@
     <mpJwt id="jwtUserConsumer" keyName="theKeyId" audiences="targetService" issuer="${jwt.issuer}"/>
 
     <!-- PostgreSQL JDBC driver library -->
-    <library id="PostgresLib">
+    <library id="postgresql-library">
         <fileset dir="${shared.resource.dir}" includes="*.jar"/>
     </library>
 
-    <!-- PostgreSQL DataSource -->
-    <dataSource id="PostgresDS" jndiName="jdbc/PostgresDS" type="javax.sql.XADataSource">
-        <jdbcDriver libraryRef="PostgresLib "/>
+    <jdbcDriver id="postgresql-driver"
+                javax.sql.XADataSource="org.postgresql.xa.PGXADataSource"
+                javax.sql.ConnectionPoolDataSource="org.postgresql.ds.PGConnectionPoolDataSource"
+                libraryRef="postgresql-library"/>
+
+    <dataSource id="postgres-ds" jndiName="jdbc/postgres-ds" jdbcDriverRef="postgresql-driver">
+        <properties databaseName="postgres"
+                    serverName="localhost"
+                    portNumber="5432"
+                    user="postgres"
+                    password="your_strong_password"/>
+    </dataSource>
+
+    <dataSource id="postgres-jobrunr-ds" jndiName="jdbc/postgres-jobrunr-ds" jdbcDriverRef="postgresql-driver"
+                type="javax.sql.ConnectionPoolDataSource" transactional="false">
         <properties databaseName="postgres"
                     serverName="localhost"
                     portNumber="5432"
