@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 @ApplicationScoped
+@Transactional
 public class MailSendingRepository {
 
     @PersistenceContext(unitName = "jpa-unit")
@@ -17,7 +18,6 @@ public class MailSendingRepository {
         return em.find(MailSending.class, id);
     }
 
-    @Transactional
     public void save(MailSending mailSending) {
         if (mailSending.getId() == null) {
             em.persist(mailSending);
@@ -26,7 +26,6 @@ public class MailSendingRepository {
         }
     }
 
-    @Transactional
     public void delete(Long id) {
         MailSending entity = findById(id);
         if (entity != null) {

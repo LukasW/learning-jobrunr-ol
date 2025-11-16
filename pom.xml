@@ -17,7 +17,7 @@
         <slf4j.jdk.version>1.7.30</slf4j.jdk.version>
         <final.name>learning-jobrunr-ol</final.name>
         <slf4j.api.version>1.7.30</slf4j.api.version>
-        <jobrunr.version>8.2.0</jobrunr.version>
+        <jobrunr.version>8.2.2</jobrunr.version>
         <lombok.version>1.18.42</lombok.version>
         <compiler-plugin.version>3.14.1</compiler-plugin.version>
     </properties>
@@ -62,13 +62,12 @@
             <artifactId>jakarta.transaction-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.8</version>
+            <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

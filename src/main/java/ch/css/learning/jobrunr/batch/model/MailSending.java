@@ -20,8 +20,14 @@ public class MailSending {
     @Column(nullable = false)
     private String address;
 
-    @Column(name = "sent_date")
+    @Column(nullable = false)
+    private String mailTemplateKey;
+
+    @Column(name = "sent_date", nullable = false)
     private LocalDateTime sentDate;
+
+    @ManyToOne
+    private User user;
 
     @PrePersist
     protected void onCreate() {

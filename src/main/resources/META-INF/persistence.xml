@@ -6,7 +6,7 @@
     <persistence-unit name="jpa-unit">
         <jta-data-source>jdbc/PostgresDS</jta-data-source>
         <properties>
-            <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
             <!-- <property name="jakarta.persistence.sql-load-script-source" value="META-INF/defaultdata.sql"/> -->
             <property name="eclipselink.logging.level" value="FINEST"/>
         </properties>
